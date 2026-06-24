@@ -1,0 +1,13 @@
+com\human\www\utils\ResultVO.class
+com\human\www\domain\User.class
+com\human\www\service\impl\ScoreServiceImpl.class
+com\human\www\service\impl\UserServiceImpl.class
+com\human\www\HumanManageApplication.class
+com\human\www\controller\ScoreController.class
+com\human\www\domain\Score.class
+com\human\www\mapper\ScoreMapper.class
+com\human\www\service\ScoreService.class
+com\human\www\mapper\UserMapper.class
+com\human\www\controller\UserController.class
+com\human\www\controller\HTMLController.class
+com\human\www\service\UserService.class

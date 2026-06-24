@@ -1,0 +1,13 @@
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\controller\HTMLController.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\controller\ScoreController.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\controller\UserController.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\domain\Score.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\domain\User.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\HumanManageApplication.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\mapper\ScoreMapper.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\mapper\UserMapper.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\service\impl\ScoreServiceImpl.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\service\impl\UserServiceImpl.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\service\ScoreService.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\service\UserService.java
+C:\java\ProjectDirs\HumanManage\src\main\java\com\human\www\utils\ResultVO.java

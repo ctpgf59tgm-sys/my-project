@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能程序</title>
+
+  <!--正确引入 CSS -->
+  <link rel="stylesheet" th:href="@{/css/element-ui.css}">
+  <!-- JavaScript 保持用 script -->
+  <script type="text/javascript" th:src="@{/js/vue.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/element-ui.js}"></script>
+  <script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Microsoft YaHei', sans-serif;
+      height: 100%;
+      background-color: #f0f2f5;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    /* 头部样式 */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 60px;
+      background: #393d49;
+      color: white;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+    .left_open {
+      margin-right: 20px;
+      color: white;
+      cursor: pointer;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    /* 主体区域 */
+    .main-container {
+      display: flex;
+      flex: 1;
+    }
+    /* 左侧菜单 */
+    .sidebar {
+      width: 200px;
+      background: #393d49;
+      transition: width 0.3s;
+      overflow: hidden;
+    }
+    .sidebar.collapsed {
+      width: 60px;
+    }
+    .sidebar-menu {
+      height: 100%;
+      border-right: none;
+    }
+    .sidebar.collapsed .menu-text {
+      display: none;
+    }
+    .sidebar .menu-icon {
+      font-size: 1.2rem;
+      margin-right: 10px;
+      text-align: center;
+      width: 24px;
+    }
+    /* 内容区域 */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      background: url('https://picsum.photos/1920/1080') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .page-content {
+      padding: 15px;
+    }
+    .x-iframe {
+      width: 100%;
+      height: calc(100vh - 120px);
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    /* 底部 */
+    .footer {
+      text-align: center;
+      padding: 10px;
+      background: #393d49;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+    /* 图标字体模拟 */
+    .iconfont {
+      font-family: 'Arial' !important;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <!-- 头部 -->
+      <div class="header">
+        <div style="display: flex; align-items: center;">
+          <span class="left_open" @click="toggleSidebar">
+            <i class="el-icon-s-fold" v-if="!sidebarCollapsed"></i>
+            <i class="el-icon-s-unfold" v-else></i>
+          </span>
+          <a href="#" class="logo">智能程序系统</a>
+        </div>
+
+        <div class="user-info">
+          <img :src="user.userImg" alt="头像" class="user-avatar" />
+          <el-dropdown @command="handleCommand">
+            <span>{{ user.userName }}</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
+
+      <!-- 主体 -->
+      <div class="main-container">
+        <!-- 左侧菜单 -->
+        <div class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+          <el-menu
+            class="sidebar-menu"
+            mode="vertical"
+            background-color="#393d49"
+            text-color="#ccc"
+            active-text-color="#409eff"
+            :collapse="sidebarCollapsed"
+            :collapse-transition="false"
+          >
+            <!-- 用户管理 -->
+            <el-submenu index="1">
+              <template slot="title">
+                <i class="el-icon-user menu-icon"></i>
+                <span class="menu-text">用户管理</span>
+              </template>
+              <el-menu-item index="1-1" @click="loadPage('/user.html')">
+                <i class="el-icon-menu menu-icon"></i>
+                <span slot="title" class="menu-text">用户列表</span>
+              </el-menu-item>
+            </el-submenu>
+
+            <!-- 成绩管理 -->
+            <el-submenu index="2">
+              <template slot="title">
+                <i class="el-icon-brush menu-icon"></i>
+                <span class="menu-text">成绩管理</span>
+              </template>
+              <el-menu-item index="2-1" @click="loadPage('/score.html')">
+                <i class="el-icon-s-promotion menu-icon"></i>
+                <span slot="title" class="menu-text">成绩列表</span>
+              </el-menu-item>
+            </el-submenu>
+
+            <!--协议管理-->
+            <el-submenu index="3">
+              <template slot="title">
+                <i class="el-icon-s-finance menu-icon"></i>
+                <span class="menu-text">协议管理</span>
+              </template>
+              <el-menu-item index="3-1" @click="loadPage('')">
+                <i class="el-icon-s-management menu-icon"></i>
+                <span slot="title" class="menu-text">协议列表</span>
+              </el-menu-item>
+            </el-submenu>
+
+          </el-menu>
+        </div>
+
+        <!-- 右侧内容 -->
+        <div class="content-area">
+          <div class="page-content">
+            <iframe
+              :src="currentSrc"
+              frameborder="0"
+              scrolling="yes"
+              class="x-iframe"
+              ref="iframe"
+            ></iframe>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 底部 -->
+      <div class="footer">
+        <div class="copyright">四川成都市  2025.10  智能程序设计</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          user: {
+            userName:'朴智妍',
+            userImg: '/image/1.jpg'
+          },
+          sidebarCollapsed: false,
+          currentSrc: '' // iframe 当前加载的页面
+        };
+      },
+      methods: {
+        toggleSidebar() {
+          this.sidebarCollapsed = !this.sidebarCollapsed;
+        },
+        loadPage(url) {
+          // 模拟 iframe 加载页面
+          this.currentSrc = url;
+        },
+        handleCommand(command) {
+          if (command === 'logout') {
+            alert('已退出登录');
+            localStorage.removeItem('user');
+            window.location.href = 'http://localhost:8080/';
+          }
+        }
+      },
+      mounted() {
+        // 从 localStorage 读取用户信息
+        const user = localStorage.getItem('user');
+        if (user) {
+          const parsed = JSON.parse(user);
+          this.user.userName = parsed.userName || '未命名用户';
+          this.user.userImg = parsed.userImg || this.user.userImg;
+        } else {
+          // 模拟数据
+          this.user.userName = '管理员';
+        }
+
+        // 默认加载首页
+        this.loadPage(""); // 可替换为真实页面
+      }
+    });
+  </script>
+</body>
+</html>
